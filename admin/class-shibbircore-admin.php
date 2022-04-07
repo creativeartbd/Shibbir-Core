@@ -159,7 +159,7 @@ class Shibbircore_Admin {
 		$workout_fav 	= $fields['workout_fav'];
 		$fitness_extra 	= $fields['fitness_extra'];
 		$supplements 	= $fields['supplements'];
-		$email 			= $fields['s'];
+		$email 			= $fields['email'];
 		$password 		= $fields['password'];
 
 		$user = wp_create_user( $email, $password, $email); 
