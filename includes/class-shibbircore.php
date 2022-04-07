@@ -158,7 +158,7 @@ class Shibbircore {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'register_menu' );
 		$this->loader->add_action( 'init', $plugin_admin, 'register_shortocde' );
-
+		$this->loader->add_action( 'elementor_pro/forms/new_record', $plugin_admin, 'shibbir_create_new_user' );
 	}
 
 	/**

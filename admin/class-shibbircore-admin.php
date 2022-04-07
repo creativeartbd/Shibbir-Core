@@ -135,4 +135,11 @@ class Shibbircore_Admin {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/registration.php';
 		return ob_get_clean();
 	}
+
+	public function shibbir_create_new_user( $record, $ajax_handler ) {
+		echo '<pre>';
+			print_r( $record );
+			print_r( $ajax_handler );
+		echo '</pre>';
+	}
 }
