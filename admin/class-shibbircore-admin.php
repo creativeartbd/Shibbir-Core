@@ -202,5 +202,7 @@ class Shibbircore_Admin {
 		unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_recent_comments']);
 		unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_primary']);
 		unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_secondary']);
+
+		remove_meta_box( 'e-dashboard-overview', 'dashboard', 'normal');
 	}
 }
