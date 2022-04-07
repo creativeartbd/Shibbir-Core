@@ -164,6 +164,11 @@ class Shibbircore_Admin {
 
 		$user = wp_create_user( $email, $password, $email); 
 
+		// echo '<pre>';
+		// print_r( $user );
+		// echo '</pre>';
+		// die();
+
 		if (is_wp_error($user)){ // if there was an error creating a new user
 			$ajax_handler->add_error_message("Failed to create new user: ".$user->get_error_message()); //add the message
 			$ajax_handler->is_success = false;
