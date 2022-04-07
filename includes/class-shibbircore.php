@@ -161,6 +161,7 @@ class Shibbircore {
 		$this->loader->add_action( 'elementor_pro/forms/new_record', $plugin_admin, 'shibbir_create_new_user', 10, 2 );
 		// Disable dashboard widget for users except administrator
 		$this->loader->add_action( 'wp_dashboard_setup', $plugin_admin, 'remove_dashboard_widgets');
+		$this->loader->add_action( 'after_setup_theme', $plugin_admin, 'remove_admin_bar');
 		
 	}
 
