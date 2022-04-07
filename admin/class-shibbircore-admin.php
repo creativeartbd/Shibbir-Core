@@ -137,9 +137,52 @@ class Shibbircore_Admin {
 	}
 
 	public function shibbir_create_new_user( $record, $ajax_handler ) {
-		echo '<pre>';
-			print_r( $record );
-			print_r( $ajax_handler );
-		echo '</pre>';
+
+		//make sure its our form
+		$form_name = $record->get_form_settings( 'form_name' );
+
+		// Replace MY_FORM_NAME with the name you gave your form
+		if ( 'Create New User' !== $form_name ) {
+			return;
+		}
+
+		$raw_fields = $record->get( 'fields' );
+		$fields = [];
+		foreach ( $raw_fields as $id => $field ) {
+			$fields[ $id ] = $field['value'];
+		}
+
+		$fitness_goal 	= $fields['fitness_goal'];
+		$age 			= $fields['age'];
+		$workout 		= $fields['workout'];
+		$workout_long 	= $fields['workout_long'];
+		$workout_fav 	= $fields['workout_fav'];
+		$fitness_extra 	= $fields['fitness_extra'];
+		$supplements 	= $fields['supplements'];
+		$email 			= $fields['s'];
+		$password 		= $fields['password'];
+
+		$user = wp_create_user( $email, $password, $email); 
+
+		if (is_wp_error($user)){ // if there was an error creating a new user
+			$ajax_handler->add_error_message("Failed to create new user: ".$user->get_error_message()); //add the message
+			$ajax_handler->is_success = false;
+			return;
+		}
+
+		add_user_meta( $user, 'fitness_goal', $fitness_goal);
+		add_user_meta( $user, 'age', $age);
+		add_user_meta( $user, 'workout', $workout);
+		add_user_meta( $user, 'workout_long', $workout_long);
+		add_user_meta( $user, 'workout_fav', $workout_fav);
+		add_user_meta( $user, 'fitness_extra', $fitness_extra);
+		add_user_meta( $user, 'supplements', $supplements);
+
+		// echo '<pre>';
+		// 	print_r($raw_fields);
+		// 	print_r($fields);
+		// 	//print_r( $record );
+		// 	//print_r( $ajax_handler );
+		// echo '</pre>';
 	}
 }
