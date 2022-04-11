@@ -79,6 +79,17 @@ class Shibbircore {
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 
+		add_role( 'trainer', 'Trainer', array( 
+			'read' => true, 
+			// 'edit_posts' => true,
+			// 'delete_posts' => true,
+			// 'edit_published_posts' => true,
+			// 'publish_posts' => true,
+			// 'edit_files' => true,
+			// 'upload_files' => true, //last in array needs no comma!
+			// 'level_1' => true
+		) );
+
 	}
 
 	/**
@@ -154,14 +165,17 @@ class Shibbircore {
 
 		$plugin_admin = new Shibbircore_Admin( $this->get_plugin_name(), $this->get_version() );
 
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'register_menu' );
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'remove_admin_menu_for_users' );
 		$this->loader->add_action( 'init', $plugin_admin, 'register_shortocde' );
 		$this->loader->add_action( 'elementor_pro/forms/new_record', $plugin_admin, 'shibbir_create_new_user', 10, 2 );
-		// Disable dashboard widget for users except administrator
-		$this->loader->add_action( 'wp_dashboard_setup', $plugin_admin, 'remove_dashboard_widgets');
-		$this->loader->add_action( 'after_setup_theme', $plugin_admin, 'remove_admin_bar');
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'create_customer_page');
+
+		$this->loader->add_filter( 'use_block_editor_for_post', $plugin_admin, 'disable_gutenberg');
+		$this->loader->add_filter( 'screen_options_show_screen', $plugin_admin, 'shibbir_remove_screen_options');
 		
 	}
 
@@ -176,8 +190,24 @@ class Shibbircore {
 
 		$plugin_public = new Shibbircore_Public( $this->get_plugin_name(), $this->get_version() );
 
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		$this->loader->add_action( 'after_setup_theme', $plugin_public, 'remove_admin_bar');
+		// WooCommece account end point
+		$this->loader->add_action( 'woocommerce_account_my-customer_endpoint', $plugin_public, 'my_customer_endpoint');
+		$this->loader->add_action( 'woocommerce_account_videos_endpoint', $plugin_public, 'my_video_endpoint');
+		$this->loader->add_action( 'woocommerce_account_membership-plan_endpoint', $plugin_public, 'my_membership_plan_endpoint');
+		$this->loader->add_action( 'woocommerce_account_report_endpoint', $plugin_public, 'my_report_endpoint');
+		$this->loader->add_action( 'init', $plugin_public, 'my_custom_endpoints');
+		$this->loader->add_action( 'woocommerce_locate_template', $plugin_public, 'shibbir_woo_locate_template', 10, 3);
+		$this->loader->add_action( 'woocommerce_account_content', $plugin_public, 'shibbir_woocommerce_account_content', 99);
+		// Apply auto copuon
+		$this->loader->add_action( 'woocommerce_before_cart', $plugin_public, 'auto_apply_coupon');
+		$this->loader->add_action( 'wp_ajax_update_level_feature_action', $plugin_public, 'update_level_feature');
+
+		$this->loader->add_filter( 'woocommerce_account_menu_items', $plugin_public, 'remove_woo_menu_items');
+		$this->loader->add_filter( 'after_switch_theme', $plugin_public, 'my_custom_flush_rewrite_rules');
+		$this->loader->add_filter( 'query_vars', $plugin_public, 'my_custom_query_vars');
+		$this->loader->add_filter( 'show_admin_bar', $plugin_public, 'show_admin_bar_callback');
 
 	}
 

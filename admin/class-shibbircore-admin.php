@@ -123,17 +123,30 @@ class Shibbircore_Admin {
 	}
 
 	public function register_menu_callback() {
-		echo 'Hello';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/partials/theme-core.php';
 	}
 
 	public function register_shortocde() {
-		add_shortcode( 'gym_registration', array( $this, 'gym_registration_callback') );
+		add_shortcode( 'membership_level', array( $this, 'membership_level_callback') );
 	}
 
-	public function gym_registration_callback() {
-		ob_start();
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/registration.php';
-		return ob_get_clean();
+	public function membership_level_callback( $atts ) {
+
+		$a = shortcode_atts( array(
+			'level' => 0
+		), $atts );
+		
+		$level = isset( $atts['level'] ) ? $atts['level'] : '';
+		
+		$level_features = get_post_meta( $level, 'select_this_membership_level_feature');
+		$data = '';
+		$data .= "<ul>";
+		foreach( $level_features[0] as $feature ) {
+			$data .= "<li>$feature</li>";
+		}
+		$data .= "</ul>";
+		return $data;
+		
 	}
 
 	public function shibbir_create_new_user( $record, $ajax_handler ) {
@@ -183,33 +196,52 @@ class Shibbircore_Admin {
 		add_user_meta( $user, 'fitness_extra', $fitness_extra);
 		add_user_meta( $user, 'supplements', $supplements);
 
-		// echo '<pre>';
-		// 	print_r($raw_fields);
-		// 	print_r($fields);
-		// 	//print_r( $record );
-		// 	//print_r( $ajax_handler );
-		// echo '</pre>';
+	}
+	
+	public function disable_gutenberg() {
+		return false;
 	}
 
-	public function remove_dashboard_widgets() {
-		global $wp_meta_boxes;
-		if (!current_user_can('manage_options')) {
-			unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_quick_press']);
-			unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_incoming_links']);
-			unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_right_now']);
-			unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_plugins']);
-			unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_recent_drafts']);
-			unset($wp_meta_boxes['dashboard']['normal']['core']['dashboard_recent_comments']);
-			unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_primary']);
-			unset($wp_meta_boxes['dashboard']['side']['core']['dashboard_secondary']);
+	public function remove_admin_menu_for_users() { 
 
-			remove_meta_box( 'e-dashboard-overview', 'dashboard', 'normal');
+		if( ! current_user_can('manage_options') ) {
+			remove_menu_page( 'edit.php' );
+			remove_menu_page( 'tools.php' );
+			remove_menu_page( 'edit-comments.php' );
+			remove_menu_page( 'edit.php?post_type=dt_workouts' );
+			remove_menu_page( 'edit.php?post_type=dt_headers' );
+			remove_menu_page( 'edit.php?post_type=dt_footers' );
+			remove_menu_page( 'edit.php?post_type=dt_mega_menus' );
+			remove_menu_page( 'edit.php?post_type=dt_galleries' );
+			remove_menu_page( 'vc-welcome' );
 		}
 	}
 
-	public function remove_admin_bar() {
-		if (!current_user_can('administrator') && !is_admin()) {
-		    show_admin_bar(false);
+	public function shibbir_remove_screen_options() {
+		if(!current_user_can('manage_options')) {
+			return false;
+		} else {
+			return true; 
 		}
 	}
+
+	public function create_customer_page() {
+		add_menu_page(
+			__( 'My Customer', '' ),
+			'My Customer',
+			'read',
+			'my-customer',
+			array( $this, 'create_customer_page_callback'),
+		);
+	}
+
+	public function create_customer_page_callback() {
+		echo do_shortcode( "[affiliate_area]" );
+	}
+
+	public function hide_admin_bar() {
+		return false;
+	}
+
+
 }
