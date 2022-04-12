@@ -12,68 +12,58 @@
  * @subpackage Shibbircore/public/partials
  */
 
+
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-	
-$author_obj = get_user_by('id', 1);
-
-// GET USER ORDERS (COMPLETED + PROCESSING)
-$customer_orders = get_posts( array(
-    'numberposts' => -1,
-    'meta_key'    => '_customer_user',
-    'meta_value'  => 10,
-    'post_type'   => wc_get_order_types(),
-    'post_status' => array_keys( wc_get_is_paid_statuses() ),
-) );
-
-// LOOP THROUGH ORDERS AND GET PRODUCT IDS
-if ( ! $customer_orders ) return;
-$product_ids = array();
-foreach ( $customer_orders as $customer_order ) {
-    $order = wc_get_order( $customer_order->ID );
-    $items = $order->get_items();
-    foreach ( $items as $item ) {
-        $product_id = $item->get_product_id();
-        $product_ids[] = $product_id;
-    }
+function get_user_by_product_id( $product_id ) {
+    global $wpdb;
+    $statuses = array_map( 'esc_sql', wc_get_is_paid_statuses() );
+    $customer_emails = $wpdb->get_col("
+    SELECT DISTINCT pm.meta_value FROM {$wpdb->posts} AS p
+    INNER JOIN {$wpdb->postmeta} AS pm ON p.ID = pm.post_id
+    INNER JOIN {$wpdb->prefix}woocommerce_order_items AS i ON p.ID = i.order_id
+    INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS im ON i.order_item_id = im.order_item_id
+    WHERE p.post_status IN ( 'wc-" . implode( "','wc-", $statuses ) . "' )
+    AND pm.meta_key IN ( '_billing_email' )
+    AND im.meta_key IN ( '_product_id', '_variation_id' )
+    AND im.meta_value = $product_id
+    ");
+    return $customer_emails;
 }
-$product_ids = array_unique( $product_ids );
-$product_ids_str = implode( ",", $product_ids );
 
-echo '<pre>';
-print_r( $product_ids_str );
-echo '</pre>';
-
+$trainer_taking_levels = get_user_meta( get_current_user_id(), 'membership_level', true  ); // Basically product
+$taking_levels = [];
+foreach( $trainer_taking_levels as $key => $taking_level ) {
+    $taking_levels[] = $taking_level;
+}
 ?>
-
-<!-- This file should primarily consist of HTML with a little bit of PHP. -->
 
 <table>
     <tr>
         <th>Sl</th>
-        <th>Customer Name</th>
-        <th>Customer Level</th>
+        <th>Customer Email</th>
+        <th>Your Membership Level</th>
     </tr>
-    <tr>
-        <td>2</td>
-        <td>Shibbir Ahmed</td>
-        <td>Level 1 Membership</td>
-    </tr>
-    <tr>
-        <td>3</td>
-        <td>Alex Ahmed</td>
-        <td>Level 2 Membership</td>
-    </tr>
-    <tr>
-        <td>4</td>
-        <td>Sehrish</td>
-        <td>Level 3 Membership</td>
-    </tr>
-    <tr>
-        <td>5</td>
-        <td>Rashed Ahmed</td>
-        <td>Level 1 Membership</td>
-    </tr>
+    <?php 
+    $counter = 1;
+    foreach( $trainer_taking_levels as $key => $level ) {
+        $product = wc_get_product( $level );
+        $level_name = $product->get_title();
+
+        $customer_email = get_user_by_product_id( $level );
+        if(!empty($customer_email)) {
+            $email = $customer_email[0];
+        } else {
+            $email = 'No user yet';
+        }
+        echo "<tr>";
+            echo '<td>'.$counter++.'</td>';
+            echo '<td>'.$email.'</td>';
+            echo '<td>'.$level_name.'</td>';
+        echo "</tr>";
+    }
+    ?>
 </table>
