@@ -110,7 +110,7 @@ class Shibbircore_Public {
 
 		
 		// remove follwoings page from the trainer account
-		if ( in_array( 'trainer', (array) $user->roles ) ) {
+		// if ( in_array( 'trainer', (array) $user->roles ) ) {
 
 			unset( $menu_links['subscriptions'] ); 
 			unset( $menu_links['orders'] ); 
@@ -118,7 +118,7 @@ class Shibbircore_Public {
 			unset( $menu_links['edit-address'] ); 
 			unset( $menu_links['payment-methods'] ); 
 			
-		}
+		// }
 		// we will hook "womanide-forum" later
 		$new = array( 
 			'my-customer' 		=>	'My Customer',
