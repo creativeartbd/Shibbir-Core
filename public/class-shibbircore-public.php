@@ -108,27 +108,40 @@ class Shibbircore_Public {
 	public function remove_woo_menu_items( $menu_links ) {
 		$user = wp_get_current_user();
 
+		// echo '<pre>';
+		// 	echo print_r( $user->roles );
+		// 	print_r( $menu_links );
+		// echo '</pre>';
+
 		
 		// remove follwoings page from the trainer account
 		// if ( in_array( 'trainer', (array) $user->roles ) ) {
 
-			unset( $menu_links['subscriptions'] ); 
-			unset( $menu_links['orders'] ); 
-			unset( $menu_links['downloads'] ); 
-			unset( $menu_links['edit-address'] ); 
-			unset( $menu_links['payment-methods'] ); 
+		unset( $menu_links['subscriptions'] ); 
+		unset( $menu_links['orders'] ); 
+		unset( $menu_links['downloads'] ); 
+		unset( $menu_links['edit-address'] ); 
+		unset( $menu_links['payment-methods'] ); 
 			
+		if ( in_array( 'subscriber', (array) $user->roles ) ) {
+			unset( $menu_links['my-customer'] ); 
+			unset( $menu_links['videos'] ); 
+		}
 		// }
 		// we will hook "womanide-forum" later
-		$new = array( 
-			'my-customer' 		=>	'My Customer',
-			'videos'			=>	'Vidoes',
-			'membership-plan'	=>	'Membership Plan',
-			'report'			=>	'Report',
-			'forum'				=>	'Forum',
-		);
 
-		$menu_links = array_slice( $menu_links, 0, 1, true ) + $new + array_slice( $menu_links, 1, NULL, true );
+		if ( in_array( 'trainer', (array) $user->roles ) ) {
+			$new = array( 
+				'my-customer' 		=>	'My Customer',
+				'videos'			=>	'Vidoes',
+				'membership-plan'	=>	'Membership Plan',
+				'report'			=>	'Report',
+				'forum'				=>	'Forum',
+			);
+	
+			$menu_links = array_slice( $menu_links, 0, 1, true ) + $new + array_slice( $menu_links, 1, NULL, true );
+		}
+		
 		
 		// echo '<pre>';
 		// print_r( $menu_links );
@@ -189,7 +202,7 @@ class Shibbircore_Public {
 
 	public function auto_apply_coupon() {
 		// Auto apply coupon to all product
-		$coupon_code = 'flat50'; 
+		$coupon_code = '10per'; 
 		if ( WC()->cart->has_discount( $coupon_code ) ) return;
 		WC()->cart->apply_coupon( $coupon_code );
 		wc_print_notices();
@@ -245,6 +258,10 @@ class Shibbircore_Public {
 
 	public function shibbir_woocommerce_account_content() {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/user-account.php';
+	}
+
+	public function disable_woocommerce_styles() {
+		return '__return_empty_array';
 	}
 
 }

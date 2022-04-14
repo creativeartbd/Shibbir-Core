@@ -2,6 +2,8 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
+
+ /* Dashboard Page */
 .woocommerce-MyAccount-content table {
   border : 1px solid #ddd;
   width: 100%;
@@ -18,4 +20,48 @@
 
 .woocommerce-MyAccount-content .table-wrapper {
   overflow-x: auto;
+}
+
+table.table tr td {
+  text-align: left !important;
+}
+
+/* Membership Page */
+.wpb_wrapper .dt-sc-pro-price {
+  display: none;
+}
+
+p.product.woocommerce.add_to_cart_inline {
+  border: none !important;
+}
+
+a.button.product_type_subscription.add_to_cart_button.ajax_add_to_cart {
+  float: right;
+  width: 100%;
+  margin-top: 10px;
+  position: relative;
+  z-index: 9;
+  text-align: center;
+}
+
+.dt-sc-pro-detail span.woocommerce-Price-amount.amount {
+  font-size: 25px;
+}
+
+.dt-sc-pro-detail .dt-sc-pro-content {
+  border : none !important;
+}
+
+.dt-sc-programs .dt-sc-pro-detail {
+  padding-bottom: 30px;
+}
+
+a.added_to_cart.wc-forward {
+  float: right;
+  font-weight: bold;
+}
+
+.woocommerce a.added_to_cart {
+  position: relative;
+  z-index: 9;
 }

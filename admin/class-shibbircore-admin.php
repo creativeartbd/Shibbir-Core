@@ -138,7 +138,7 @@ class Shibbircore_Admin {
 		
 		$level = isset( $atts['level'] ) ? $atts['level'] : '';
 		
-		$level_features = get_post_meta( $level, 'select_this_membership_level_feature');
+		$level_features = get_post_meta( $level, 'choose_membership_features');
 		$data = '';
 		$data .= "<ul>";
 		foreach( $level_features[0] as $feature ) {
