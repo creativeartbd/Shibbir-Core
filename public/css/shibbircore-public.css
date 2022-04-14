@@ -4,8 +4,18 @@
  */
 .woocommerce-MyAccount-content table {
   border : 1px solid #ddd;
+  width: 100%;
+}
+
+.woocommerce-MyAccount-content table tr th {
+  text-align: left;
+  text-transform: capitalize;
 }
 
 .woocommerce-MyAccount-content table tr td {
   text-align: left;
+}
+
+.woocommerce-MyAccount-content .table-wrapper {
+  overflow-x: auto;
 }

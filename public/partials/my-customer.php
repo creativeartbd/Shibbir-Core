@@ -39,11 +39,23 @@ $taking_levels = [];
 foreach( $trainer_taking_levels as $key => $taking_level ) {
     $taking_levels[] = $taking_level;
 }
+
+$user_meta = get_user_meta( get_current_user_id() );
+$membership_level = $user_meta['membership_level'];
+$membership_level = unserialize( $membership_level[0] );
+$acf_show_trainer = get_fields( 'show_trainer_in_trainer_online_coaching', get_current_user_id(  ) );
+
+
+// echo '<pre>';
+// var_dump( $acf_show_trainer );
+// //print_r( $user_meta );
+// echo '</pre>';
+
 ?>
 
 <table>
     <tr>
-        <th>Sl</th>
+        <th>Serial</th>
         <th>Customer Email</th>
         <th>Your Membership Level</th>
     </tr>
