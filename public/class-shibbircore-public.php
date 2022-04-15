@@ -217,7 +217,9 @@ class Shibbircore_Public {
 	}
 
 	public function show_admin_bar_callback() {
-		return false;
+		if (!current_user_can('administrator') && !is_admin()) {
+		    return true;
+		}
 	}
 
 	public function shibbir_woo_locate_template( $template, $template_name, $template_path ) {
