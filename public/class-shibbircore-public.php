@@ -202,12 +202,6 @@ class Shibbircore_Public {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/report.php';
 	}
 
-	public function remove_admin_bar() {
-		if (!current_user_can('administrator') && !is_admin()) {
-		    show_admin_bar(true);
-		}
-	}
-
 	public function auto_apply_coupon() {
 		// Auto apply coupon to all product
 		$coupon_code = '10per'; 

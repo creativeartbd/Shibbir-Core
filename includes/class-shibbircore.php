@@ -192,7 +192,6 @@ class Shibbircore {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-		$this->loader->add_action( 'after_setup_theme', $plugin_public, 'remove_admin_bar');
 		// WooCommece account end point
 		$this->loader->add_action( 'woocommerce_account_my-customer_endpoint', $plugin_public, 'my_customer_endpoint');
 		$this->loader->add_action( 'woocommerce_account_videos_endpoint', $plugin_public, 'my_video_endpoint');
