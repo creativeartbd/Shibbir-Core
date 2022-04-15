@@ -26,8 +26,6 @@ $allowed_html = array(
 		'href' => array(),
 	),
 );
-
-
 ?>
 
 <h3>
@@ -40,6 +38,7 @@ $allowed_html = array(
 </h3>
 
 <?php 
+
 $user = wp_get_current_user();
 if ( in_array( 'trainer', (array) $user->roles ) ) {
 
@@ -47,10 +46,9 @@ if ( in_array( 'trainer', (array) $user->roles ) ) {
 	$membership_level = $user_meta['membership_level'];
 	$membership_level = unserialize( $membership_level[0] );
 	$acf_show_trainer = get_field( 'show_trainer_in_trainer_online_coaching', get_current_user_id(  ) );
-
+	$user_memberships = get_user_meta( get_current_user_id(), 'membership_level' );
 
 	// echo '<pre>';
-	// print_r( $acf_show_trainer );
 	// print_r( $user_meta );
 	// echo '</pre>';
 	?>
@@ -103,23 +101,16 @@ if ( in_array( 'trainer', (array) $user->roles ) ) {
 				<th><b>Membership Commission</b></th>
 				<td>
 				<?php  
-				$args = array(
-					'category' => array( 'membership-level' ),
-					'orderby'  => 'name',
-				);
-				
-				$products = wc_get_products( $args );
-				$all_products = $products;
-				foreach( $products as $key => $product ) {
-					$product_id 	= $product->get_id();
-					$product_name 	= $product->get_name();
-					if( isset( $user_meta["membership_commission_{$key}_membership_level"][0] ) ) {
-						$get_product = wc_get_product( $user_meta["membership_commission_{$key}_membership_level"][0] );
-						echo $get_product->get_name() . ' (' . $get_product->get_price_html() . ')';
-						echo ' - ';
-						echo $user_meta["membership_commission_{$key}_commission"][0] . '%';
-						echo '<hr/>';
-					}	
+				$all_products = wc_get_products(array('taxonomy'=>'membership-level'));
+				for( $i = 0; $i <6; $i++ ) {
+					if( isset( $user_meta["membership_commission_{$i}_membership_level"][0] ) ) {
+						if( in_array( $user_meta["membership_commission_{$i}_membership_level"][0], $user_memberships[0] ) ) {
+							$get_product = wc_get_product( $user_meta["membership_commission_{$i}_membership_level"][0] );
+							echo $get_product->get_name() . ' (' . $get_product->get_price_html() . ')';
+							echo ' - ';
+							echo '<hr/>';
+						}
+					}
 				}
 				?>
 				</td>
@@ -128,19 +119,18 @@ if ( in_array( 'trainer', (array) $user->roles ) ) {
 				<th><b>Customer Discount</b></th>
 				<td>
 					<?php
-					foreach( $all_products as $key => $product ) {
-						$product_id 	= $product->get_id();
-						$product_name 	= $product->get_name();
-
-						if( isset( $user_meta["customer_discount_{$key}_membership_level"][0] ) ) {
-							$get_product = wc_get_product( $user_meta["customer_discount_{$key}_membership_level"][0] );
-							$coupon = new WC_Coupon( $user_meta["customer_discount_{$key}_coupon"][0] );
-							$coupon_code = $coupon->get_code() . ' (' . wc_format_decimal( $coupon->get_amount(), 2 ) . ')';
-							echo $get_product->get_name() . ' (' . $get_product->get_price_html() . ')';
-							echo ' - ';
-							echo $coupon_code;
-							echo '<hr/>';
-						}	
+					for( $i = 0; $i <6; $i++ ) {
+						if( isset( $user_meta["customer_discount_{$i}_membership_level"][0] ) ) {
+							if( in_array( $user_meta["customer_discount_{$i}_membership_level"][0], $user_memberships[0] ) ) {
+								$get_product = wc_get_product( $user_meta["customer_discount_{$i}_membership_level"][0] );
+								$coupon = new WC_Coupon( $user_meta["customer_discount_{$i}_coupon"][0] );
+								$coupon_code = $coupon->get_code() . ' (' . wc_format_decimal( $coupon->get_amount(), 2 ) . ')';
+								echo $get_product->get_name() . ' (' . $get_product->get_price_html() . ')';
+								echo ' - ';
+								echo $coupon_code;
+								echo '<hr/>';
+							}
+						}
 					}
 					?>
 				</td>
@@ -157,25 +147,25 @@ if ( in_array( 'trainer', (array) $user->roles ) ) {
 	</div>
 <?php } ?>
 <?php
-	/**
-	 * My Account dashboard.
-	 *
-	 * @since 2.6.0
-	 */
-	do_action( 'woocommerce_account_dashboard' );
+/**
+ * My Account dashboard.
+ *
+ * @since 2.6.0
+ */
+do_action( 'woocommerce_account_dashboard' );
 
-	/**
-	 * Deprecated woocommerce_before_my_account action.
-	 *
-	 * @deprecated 2.6.0
-	 */
-	do_action( 'woocommerce_before_my_account' );
+/**
+ * Deprecated woocommerce_before_my_account action.
+ *
+ * @deprecated 2.6.0
+ */
+do_action( 'woocommerce_before_my_account' );
 
-	/**
-	 * Deprecated woocommerce_after_my_account action.
-	 *
-	 * @deprecated 2.6.0
-	 */
-	do_action( 'woocommerce_after_my_account' );
+/**
+ * Deprecated woocommerce_after_my_account action.
+ *
+ * @deprecated 2.6.0
+ */
+do_action( 'woocommerce_after_my_account' );
 
 /* Omit closing PHP tag at the end of PHP files to avoid "headers already sent" issues. */

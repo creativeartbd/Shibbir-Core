@@ -204,6 +204,7 @@ class Shibbircore {
 		// Apply auto copuon
 		$this->loader->add_action( 'woocommerce_before_cart', $plugin_public, 'auto_apply_coupon');
 		$this->loader->add_action( 'wp_ajax_update_level_feature_action', $plugin_public, 'update_level_feature');
+		$this->loader->add_action( 'wp_ajax_add_trainer_video_action', $plugin_public, 'add_trainer_video_callback');
 
 		$this->loader->add_filter( 'woocommerce_account_menu_items', $plugin_public, 'remove_woo_menu_items', 99);
 		$this->loader->add_filter( 'after_switch_theme', $plugin_public, 'my_custom_flush_rewrite_rules');

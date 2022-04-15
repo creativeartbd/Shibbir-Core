@@ -220,6 +220,148 @@ class Shibbircore_Public {
 		return $template;
 	}
 
+	public function add_trainer_video_callback() {
+		if ( ! isset( $_POST['add_trainer_video_action_nonce'] )  || ! wp_verify_nonce( $_POST['add_trainer_video_action_nonce'], 'add_trainer_video_action' ) ) {
+			return false;
+		}
+		if( ! is_user_logged_in() ) {
+			return false;
+		}
+
+		$video_title = sanitize_text_field( $_POST['video_title'] );
+		$video_category = sanitize_text_field( $_POST['video_category'] );
+		$video_description = sanitize_text_field( $_POST['video_description'] );
+		$video_level = sanitize_text_field( $_POST['video_level'] );
+		$video_file = $_FILES['video_file']['name'];
+		$video_file_size = $_FILES['video_file']['size'];
+		$ext = pathinfo( $video_file, PATHINFO_EXTENSION );
+		$allowed = array("jpg" => "image/jpg", "jpeg" => "image/jpeg", "gif" => "image/gif", "png" => "image/png");
+		// Verify file size - 5MB maximum
+		$maxsize = 5 * 1024 * 1024;
+
+		$messages = [];
+		$output = [];
+		$output['success'] = false;
+
+		$args = array(
+			'category' => array( 'membership-level' ),
+			'orderby'  => 'name',
+		);
+		
+		// Get current user membership levels
+		$user_memberships = get_user_meta( get_current_user_id(), 'membership_level' );
+
+		if( isset( $video_title ) && isset( $video_category ) && isset( $video_description ) && isset( $video_level ) && isset( $video_file ) ) {
+			if( empty( $video_title ) && empty( $video_category ) && empty( $video_description ) && empty( $video_level ) && empty( $video_file ) ) {
+				$messages[] = 'All fields are required';
+			} else {
+				if( empty( $video_title ) ) {
+					$messages[] = 'Video title is required';
+				} elseif( strlen( $video_title ) > 200 || strlen( $video_title ) < 2 ) {
+					$messages[] = 'Either video title length is too short or long';
+				}
+
+				if( empty( $video_category ) ) {
+					$messages[] = 'Video category is required';
+				} elseif( !is_numeric( $video_category ) ) {
+					$messages[] = 'Invalid video category';
+				}
+
+				if( empty( $video_file ) ) {
+					$messages[] = 'Upload a video file';
+				} elseif( !array_key_exists( $ext, $allowed ) ) {
+					$messages[] = 'Please upload a valid file format. We are allowing jpg, jpeg, gif and png file extension';
+				} elseif ( $video_file_size > $maxsize ) {
+					$messages[] = 'File size is larger than the allowed limit. Please upload ' . $maxsize . ' MB file';
+				}
+
+				if( empty( $video_description ) ) {
+					$messages[] = 'Video description is required';
+				} 
+
+				if( empty( $video_level ) ) {
+					$messages[] = 'Video level is required';
+				}  elseif( !is_numeric( $video_level ) ) {
+					$messages[] = 'Invalid membership level';
+				} elseif( !in_array( $video_level, $user_memberships[0] ) ) {
+					$messages[] = 'Your selected membership level is not found';
+				}
+			}
+
+			if( !empty( $messages ) ) {
+				foreach( $messages as $message ) {
+					$output['message'][] = $message;
+				}
+			} else {
+				$args = array(
+					'post_title'    => $video_title,
+					'post_content'  => $video_description,
+					'post_status'   => 'publish',
+					'post_author'   => get_current_user_id(),
+					'post_category' => array( $video_category ),
+					'post_type'		=> 'training_video'
+				);
+				 
+				// Insert the post into the database.
+				$post_id = wp_insert_post( $args );
+				if( ! is_wp_error( $post_id ) ) {
+
+					$file_attr = wp_handle_upload( $video_file, array(
+						'test_form' => true, 
+						'action' => 'plupload_image_upload' ) 
+					);
+     				$attachment = array(
+						 'guid' => $file_attr['url'], 
+						 'post_mime_type' => $file_attr['type'], 
+						 'post_title' => preg_replace('/\\.[^.]+$/', '', basename( $video_file ) ), 
+						 'post_content' => '', 
+						 'post_status' => 'inherit'
+					);
+
+					$attach_id = wp_insert_attachment( $attachment, $file_attr['file'], $post_id );
+
+					// $wp_upload_dir = wp_upload_dir();
+					// $filetype = wp_check_filetype( basename( $video_file ), null );
+					// $attachment = array(
+					// 	'guid'           => $wp_upload_dir['url'] . '/' . basename( $video_file ), 
+					// 	'post_mime_type' => $filetype['type'],
+					// 	'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $video_file ) ),
+					// 	'post_content'   => '',
+					// 	'post_status'    => 'inherit'
+					// );
+					// $attach_id = wp_insert_attachment( $attachment, $video_file, $post_id );
+
+					if( ! is_wp_error( $attach_id ) ) {
+
+						// Make sure that this file is included, as wp_generate_attachment_metadata() depends on it.
+						require_once( ABSPATH . 'wp-admin/includes/image.php' );
+
+						wp_update_attachment_metadata($id, wp_generate_attachment_metadata($id, $file_attr['file'] ) );
+						
+						// // Generate the metadata for the attachment, and update the database record.
+						// $attach_data = wp_generate_attachment_metadata( $attach_id, $video_file );
+						// wp_update_attachment_metadata( $attach_id, $attach_data );
+
+						// Update post meta
+						update_post_meta( $post_id, 'training_video', $attach_id );
+						update_post_meta( $post_id, 'membership_level', $video_level );
+
+						$output['success'] = true;
+						$output['message'] = 'Successfully Added a new Video.';
+					} else {
+						$output['success'] = false;
+						$output['message'] = 'OPPs! Somethign is wrong. Please contact administrator. Thank You.';
+					}
+				} else {
+					$output['success'] = false;
+					$output['message'] = 'OPPs! Somethign is wrong. Please contact administrator. Thank You.';
+				}
+			}
+			echo json_encode( $output );
+		}
+		wp_die();
+	}
+
 	public function update_level_feature() {
 
 		if ( ! isset( $_POST['update_level_feature_nonce'] )  || ! wp_verify_nonce( $_POST['update_level_feature_nonce'], 'update_level_feature_action' ) ) {
@@ -237,7 +379,6 @@ class Shibbircore_Public {
 
 		if( empty( $level_feature ) ) {
 			$messages[] = 'Plese select level feature';
-			$output['success'] = false;
 		}
 		
 		if( !empty( $messages ) ) {
@@ -247,9 +388,6 @@ class Shibbircore_Public {
 		} else {
 			$output['success'] = true;
 			$output['message'] = 'Successfully Updated';
-
-
-
 		}
 
 		echo json_encode( $output );
