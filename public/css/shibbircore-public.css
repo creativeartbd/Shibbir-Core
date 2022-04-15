@@ -26,6 +26,15 @@ table.table tr td {
   text-align: left !important;
 }
 
+.woocommerce-MyAccount-navigation ul {
+  border : 1px solid #ddd;
+}
+
+.woocommerce-MyAccount-navigation ul>li.is-active>a {
+  margin-top : 5px;
+  margin-left : 5px;
+}
+
 /* Membership Page */
 .wpb_wrapper .dt-sc-pro-price {
   display: none;
@@ -64,4 +73,48 @@ a.added_to_cart.wc-forward {
 .woocommerce a.added_to_cart {
   position: relative;
   z-index: 9;
+}
+
+/* form error messager  */
+
+.error-message {
+  border: none;
+  background-color: red;
+  color: #fff;
+  padding: 10px;
+  margin-bottom: 5px;
+}
+
+.success-message {
+  border: none;
+  background-color: green;
+  color: #fff;
+  padding: 10px;
+  margin-bottom: 5px;
+}
+
+
+/* All video dsection */
+
+.video-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.video-wrapper .video {
+  flex: 25%;
+  border : 1px solid #ddd;
+  margin : 10px;
+  box-sizing: border-box;
+  padding : 10px;
+}
+
+.video-wrapper .video h5 {
+  margin-bottom: 0;
+}
+
+.video-wrapper .video img {
+  width : 100%;
 }

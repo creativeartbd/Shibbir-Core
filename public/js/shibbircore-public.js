@@ -37,10 +37,9 @@
      
       var actionUrl = handle.ajaxurl;
       var data = new FormData(this);
-      // data.append('file', $('#video_file')[0].files[0]);
 
       $.ajax({
-        dataType: "html",
+        dataType: "json",
         type: "POST",
         url: actionUrl,
         data: data,
@@ -48,20 +47,21 @@
         contentType: false,
         beforeSend: function () {
           $("#video_btn").val("Please wait...");
-          // $("#video_btn").prop("disabled", true);
+          $("#video_btn").prop("disabled", true);
         },
         success: function (data) {
-          console.log(data);
-          $(".ajax_response").html(data);
-          // if(!data.success) {
-          //   data.message.forEach(function(key, ele){
-          //     $(".ajax_response").append("<div class='error-message'>" + key +"</div>");
-          //   }); 
-          // } else {
-          //   $(".ajax_response").append("<div class='success-message'>" + data.message +"</div>");
-          // }
-          // $("#udpate_level_submit").prop("disabled", false);
-          $("#udpate_level_submit").val("Add a new video");
+          //console.log(data);
+          $(".ajax_response").html("");
+          if(!data.success) {
+            data.message.forEach(function(key, ele){
+              $(".ajax_response").append("<div class='error-message'>" + key +"</div>");
+            }); 
+          } else {
+            $(".ajax_response").append("<div class='success-message'>" + data.message +"</div>");
+            $('#add_new_training_video')[0].reset();
+          }
+          $("#video_btn").prop("disabled", false);
+          $("#video_btn").val("Add a new video");
         },
       });
     });

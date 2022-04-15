@@ -116,8 +116,10 @@ class Shibbircore_Public {
 		
 		// remove follwoings page from the trainer account
 		// if ( in_array( 'trainer', (array) $user->roles ) ) {
-
-		unset( $menu_links['subscriptions'] ); 
+		if ( in_array( 'trainer', (array) $user->roles ) ) {
+			unset( $menu_links['subscriptions'] );  
+		}
+		
 		unset( $menu_links['orders'] ); 
 		unset( $menu_links['downloads'] ); 
 		unset( $menu_links['edit-address'] ); 
@@ -133,7 +135,7 @@ class Shibbircore_Public {
 		if ( in_array( 'trainer', (array) $user->roles ) ) {
 			$new = array( 
 				'my-customer' 		=>	'My Customer',
-				'videos'			=>	'Vidoes',
+				'videos'			=>	'Videos',
 				'membership-plan'	=>	'Membership Plan',
 				'report'			=>	'Report',
 				'forum'				=>	'Forum',
@@ -165,6 +167,7 @@ class Shibbircore_Public {
 		$vars[] = 'Membership Plan';
 		$vars[] = 'Report';
 		$vars[] = 'Forum';
+		$vars[] = 'all-videos';
 		return $vars;
 	}
 
@@ -174,6 +177,7 @@ class Shibbircore_Public {
 		add_rewrite_endpoint( 'membership-plan', EP_ROOT | EP_PAGES );
 		add_rewrite_endpoint( 'report', EP_ROOT | EP_PAGES );
 		add_rewrite_endpoint( 'forum', EP_ROOT | EP_PAGES );
+		add_rewrite_endpoint( 'all-videos', EP_ROOT | EP_PAGES );
 	}
 
 	public function my_customer_endpoint() {
@@ -182,6 +186,10 @@ class Shibbircore_Public {
 
 	public function my_video_endpoint() {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/videos.php';
+	}
+
+	public function my_all_videos_endpoint() {
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/all-videos.php';
 	}
 
 	public function my_membership_plan_endpoint() {
@@ -234,6 +242,7 @@ class Shibbircore_Public {
 		$video_level = sanitize_text_field( $_POST['video_level'] );
 		$video_file = $_FILES['video_file']['name'];
 		$video_file_size = $_FILES['video_file']['size'];
+		$video_file_tmp = $_FILES['video_file']['tmp_name'];
 		$ext = pathinfo( $video_file, PATHINFO_EXTENSION );
 		$allowed = array("jpg" => "image/jpg", "jpeg" => "image/jpeg", "gif" => "image/gif", "png" => "image/png");
 		// Verify file size - 5MB maximum
@@ -253,7 +262,7 @@ class Shibbircore_Public {
 
 		if( isset( $video_title ) && isset( $video_category ) && isset( $video_description ) && isset( $video_level ) && isset( $video_file ) ) {
 			if( empty( $video_title ) && empty( $video_category ) && empty( $video_description ) && empty( $video_level ) && empty( $video_file ) ) {
-				$messages[] = 'All fields are required';
+				$messages[] = 'All fields are required ss';
 			} else {
 				if( empty( $video_title ) ) {
 					$messages[] = 'Video title is required';
@@ -305,49 +314,33 @@ class Shibbircore_Public {
 				// Insert the post into the database.
 				$post_id = wp_insert_post( $args );
 				if( ! is_wp_error( $post_id ) ) {
+					
+					$filename = basename($video_file);
+					$upload_file = wp_upload_bits($filename, null, file_get_contents($video_file_tmp));
 
-					$file_attr = wp_handle_upload( $video_file, array(
-						'test_form' => true, 
-						'action' => 'plupload_image_upload' ) 
-					);
-     				$attachment = array(
-						 'guid' => $file_attr['url'], 
-						 'post_mime_type' => $file_attr['type'], 
-						 'post_title' => preg_replace('/\\.[^.]+$/', '', basename( $video_file ) ), 
-						 'post_content' => '', 
-						 'post_status' => 'inherit'
-					);
+					if (!$upload_file['error']) {
+						$wp_filetype = wp_check_filetype($filename, null );
+						$attachment = array(
+							'post_mime_type' => $wp_filetype['type'],
+							'post_parent' => $post_id,
+							'post_title' => preg_replace('/\.[^.]+$/', '', $filename),
+							'post_content' => '',
+							'post_status' => 'inherit'
+						);
+						$attachment_id = wp_insert_attachment( $attachment, $upload_file['file'], $post_id );
+						if (!is_wp_error($attachment_id)) {
+							require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+							$attachment_data = wp_generate_attachment_metadata( $attachment_id, $upload_file['file'] );
+							wp_update_attachment_metadata( $attachment_id,  $attachment_data );
+							update_post_meta( $post_id, 'training_video', $attachment_id );
+							update_post_meta( $post_id, 'membership_level', $video_level );
 
-					$attach_id = wp_insert_attachment( $attachment, $file_attr['file'], $post_id );
-
-					// $wp_upload_dir = wp_upload_dir();
-					// $filetype = wp_check_filetype( basename( $video_file ), null );
-					// $attachment = array(
-					// 	'guid'           => $wp_upload_dir['url'] . '/' . basename( $video_file ), 
-					// 	'post_mime_type' => $filetype['type'],
-					// 	'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $video_file ) ),
-					// 	'post_content'   => '',
-					// 	'post_status'    => 'inherit'
-					// );
-					// $attach_id = wp_insert_attachment( $attachment, $video_file, $post_id );
-
-					if( ! is_wp_error( $attach_id ) ) {
-
-						// Make sure that this file is included, as wp_generate_attachment_metadata() depends on it.
-						require_once( ABSPATH . 'wp-admin/includes/image.php' );
-
-						wp_update_attachment_metadata($id, wp_generate_attachment_metadata($id, $file_attr['file'] ) );
-						
-						// // Generate the metadata for the attachment, and update the database record.
-						// $attach_data = wp_generate_attachment_metadata( $attach_id, $video_file );
-						// wp_update_attachment_metadata( $attach_id, $attach_data );
-
-						// Update post meta
-						update_post_meta( $post_id, 'training_video', $attach_id );
-						update_post_meta( $post_id, 'membership_level', $video_level );
-
-						$output['success'] = true;
-						$output['message'] = 'Successfully Added a new Video.';
+							$output['success'] = true;
+							$output['message'] = 'Successfully added a new Video.';
+						} else {
+							$output['success'] = false;
+							$output['message'] = 'OPPs! Somethign is wrong. Please contact administrator. Thank You.';
+						}
 					} else {
 						$output['success'] = false;
 						$output['message'] = 'OPPs! Somethign is wrong. Please contact administrator. Thank You.';
