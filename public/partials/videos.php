@@ -31,10 +31,10 @@ $user_memberships = get_user_meta( get_current_user_id(), 'membership_level' );
 <nav class="woocommerce-MyAccount-navigation trainer-video">
 	<ul>
         <li class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--dashboard">
-            <a href="<?php echo site_url('/my-account/all-videos'); ?>">All Videos</a>
+            <a href="<?php echo get_the_permalink() . 'all-videos'; ?>">All Videos</a>
         </li>
         <li class="woocommerce-MyAccount-navigation-link woocommerce-MyAccount-navigation-link--my-customer">
-            <a href="<?php echo site_url('/my-account/videos'); ?>">Add New Video</a>
+            <a href="<?php echo get_the_permalink() . 'videos' ?>">Add New Video</a>
         </li>
     </ul>
 </nav>
