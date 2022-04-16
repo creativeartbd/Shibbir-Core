@@ -3,6 +3,10 @@
  * included in this file.
  */
 
+.trainer-video ul li  {
+  float : right;
+}
+
  /* Dashboard Page */
 .woocommerce-MyAccount-content table {
   border : 1px solid #ddd;

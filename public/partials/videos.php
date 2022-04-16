@@ -15,18 +15,13 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
-$user = wp_get_current_user();
+
 $user_meta = get_user_meta( get_current_user_id() );
 $user_memberships = get_user_meta( get_current_user_id(), 'membership_level' );
 // echo '<pre>';
 //     echo print_r(  $user_memberships );
 // echo '</pre>';
 ?>
-<style>
-    .trainer-video ul li  {
-        float : right;
-    }
-</style>
 
 <nav class="woocommerce-MyAccount-navigation trainer-video">
 	<ul>

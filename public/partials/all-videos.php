@@ -69,10 +69,7 @@ if( $posts ) {
         } else {
             $all_video_categories = '';
         }
-        
-        // echo '<pre>';
-        //     print_r(  $category );
-        // echo '</pre>';
+       
         if( $training_meta ) {
             $video_id = $training_meta[0];
             if( $video_id ) {
