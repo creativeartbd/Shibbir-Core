@@ -40,7 +40,7 @@ $user_memberships = get_user_meta( get_current_user_id(), 'membership_level' );
 $args = array(
     'author'        =>  get_current_user_id(),
     'orderby'       =>  'post_date',
-    'order'         =>  'ASC',
+    'order'         =>  'DESC',
     'posts_per_page' => -1,
     'post_type'     =>  'training_video'
 );

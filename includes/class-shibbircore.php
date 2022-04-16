@@ -201,8 +201,9 @@ class Shibbircore {
 		$this->loader->add_action( 'init', $plugin_public, 'my_custom_endpoints');
 		$this->loader->add_action( 'woocommerce_locate_template', $plugin_public, 'shibbir_woo_locate_template', 10, 3);
 		$this->loader->add_action( 'woocommerce_account_content', $plugin_public, 'shibbir_woocommerce_account_content', 99);
-		// Apply auto copuon
-		$this->loader->add_action( 'woocommerce_before_cart', $plugin_public, 'auto_apply_coupon');
+		$this->loader->add_action( 'template_redirect', $plugin_public, 'template_redirect_callback' );
+		// // Apply auto copuon
+		// $this->loader->add_action( 'woocommerce_before_cart', $plugin_public, 'auto_apply_coupon');
 		$this->loader->add_action( 'wp_ajax_update_level_feature_action', $plugin_public, 'update_level_feature');
 		$this->loader->add_action( 'wp_ajax_add_trainer_video_action', $plugin_public, 'add_trainer_video_callback');
 

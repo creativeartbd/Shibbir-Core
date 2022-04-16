@@ -204,10 +204,17 @@ class Shibbircore_Public {
 
 	public function auto_apply_coupon() {
 		// Auto apply coupon to all product
-		$coupon_code = '10per'; 
-		if ( WC()->cart->has_discount( $coupon_code ) ) return;
-		WC()->cart->apply_coupon( $coupon_code );
-		wc_print_notices();
+		
+	}
+
+	public function template_redirect_callback() {
+		$get_discount = isset( $_GET['get-discount'] ) ? sanitize_text_field( $_GET['get-discount'] ) : '';
+		if( $get_discount ) {
+			$coupon_code = 'FLAT30'; // apply 30% coupon
+			if ( WC()->cart->has_discount( $coupon_code ) ) return;
+			WC()->cart->apply_coupon( $coupon_code );
+			wc_print_notices();
+		}
 	}
 
 	public function show_admin_bar_callback() {
