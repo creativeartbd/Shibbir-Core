@@ -164,9 +164,9 @@ class Shibbircore_Public {
 	public function my_custom_query_vars($vars) {
 		$vars[] = 'my-customer';
 		$vars[] = 'videos';
-		$vars[] = 'Membership Plan';
-		$vars[] = 'Report';
-		$vars[] = 'Forum';
+		$vars[] = 'membership-plan';
+		$vars[] = 'report';
+		$vars[] = 'forum';
 		$vars[] = 'all-videos';
 		return $vars;
 	}
