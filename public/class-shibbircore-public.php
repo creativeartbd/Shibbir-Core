@@ -213,7 +213,6 @@ class Shibbircore_Public {
 			$coupon_code = 'FLAT30'; // apply 30% coupon
 			if ( WC()->cart->has_discount( $coupon_code ) ) return;
 			WC()->cart->apply_coupon( $coupon_code );
-			wc_print_notices();
 		}
 	}
 
