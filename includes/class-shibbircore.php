@@ -192,12 +192,16 @@ class Shibbircore {
 
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles', 99 );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+
 		// WooCommece account end point
 		$this->loader->add_action( 'woocommerce_account_my-customer_endpoint', $plugin_public, 'my_customer_endpoint');
 		$this->loader->add_action( 'woocommerce_account_videos_endpoint', $plugin_public, 'my_video_endpoint');
 		$this->loader->add_action( 'woocommerce_account_membership-plan_endpoint', $plugin_public, 'my_membership_plan_endpoint');
 		$this->loader->add_action( 'woocommerce_account_report_endpoint', $plugin_public, 'my_report_endpoint');
 		$this->loader->add_action( 'woocommerce_account_all-videos_endpoint', $plugin_public, 'my_all_videos_endpoint');
+		$this->loader->add_action( 'woocommerce_account_forum_endpoint', $plugin_public, 'my_forum_endpoint');
+		// WooCommece account end point
+
 		$this->loader->add_action( 'init', $plugin_public, 'my_custom_endpoints');
 		$this->loader->add_action( 'woocommerce_locate_template', $plugin_public, 'shibbir_woo_locate_template', 10, 3);
 		$this->loader->add_action( 'woocommerce_account_content', $plugin_public, 'shibbir_woocommerce_account_content', 99);

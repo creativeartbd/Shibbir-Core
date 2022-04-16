@@ -180,6 +180,10 @@ class Shibbircore_Public {
 		add_rewrite_endpoint( 'all-videos', EP_ROOT | EP_PAGES );
 	}
 
+	public function my_forum_endpoint() {
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/forum.php';
+	}
+
 	public function my_customer_endpoint() {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/partials/my-customer.php';
 	}
