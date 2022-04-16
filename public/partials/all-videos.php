@@ -57,8 +57,21 @@ if( $posts ) {
         $get_product = wc_get_product( $level_id );
         $level_name = $get_product->get_name();
         $permalink = get_the_permalink( $post->ID );
+        $all_video_categories = [];
+        $categories = get_the_terms( $post->ID, 'video_category' );  
+        if( $categories ) {
+            foreach( $categories as $category ) {
+                $all_video_categories[] = $category->name;
+            }
+        }
+        if( $all_video_categories ) {
+            $all_video_categories = ' | ' . implode(', ', $all_video_categories);
+        } else {
+            $all_video_categories = '';
+        }
+        
         // echo '<pre>';
-        //     print_r(  $training_meta );
+        //     print_r(  $category );
         // echo '</pre>';
         if( $training_meta ) {
             $video_id = $training_meta[0];
@@ -74,11 +87,13 @@ if( $posts ) {
 
         echo "<div class='video'>";
             echo "<h5><a href='$permalink'>$video_title</a></h5>";
-            echo "<span class='level'>$level_name</span>";
+            echo "<div class='video-meta'>";
+                echo "<span class='level'>$level_name</span><span class='category'>$all_video_categories</span>";
+            echo "</div>";
             if( $video_url ) {
                 echo "<img src='$video_url'>";
             }
-            echo "<a href=''>Edit</a> | <a href=''>Video</a>";
+            echo "<a href=''>Edit</a> | <a href=''>Delete</a>";
         echo "</div>";
     }
     wp_reset_postdata();

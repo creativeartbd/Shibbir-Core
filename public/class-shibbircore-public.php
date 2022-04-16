@@ -303,14 +303,13 @@ class Shibbircore_Public {
 					'post_content'  => $video_description,
 					'post_status'   => 'publish',
 					'post_author'   => get_current_user_id(),
-					'post_category' => array( $video_category ),
-					'post_type'		=> 'training_video'
+					'post_type'		=> 'training_video',
 				);
 				 
 				// Insert the post into the database.
 				$post_id = wp_insert_post( $args );
 				if( ! is_wp_error( $post_id ) ) {
-					
+					wp_set_object_terms( $post_id, intval($video_category), 'video_category' );
 					$filename = basename($video_file);
 					$upload_file = wp_upload_bits($filename, null, file_get_contents($video_file_tmp));
 
