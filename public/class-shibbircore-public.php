@@ -391,4 +391,17 @@ class Shibbircore_Public {
 		return '__return_empty_array';
 	}
 
+
+	public function change_browse_product( $translated_text, $text, $domain ) {
+		switch ( $translated_text ) {
+			case 'Browse products' :
+				$translated_text = __( 'Browse Package', 'woocommerce' );
+				break;
+		}
+		return $translated_text;
+	}
+
+	public function affwp_add_tab( $url, $page_id, $tab ) {
+		return esc_url_raw( add_query_arg( 'tab', $tab ) );
+	}
 }

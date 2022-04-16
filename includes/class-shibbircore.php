@@ -190,7 +190,7 @@ class Shibbircore {
 
 		$plugin_public = new Shibbircore_Public( $this->get_plugin_name(), $this->get_version() );
 
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles', 99 );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 		// WooCommece account end point
 		$this->loader->add_action( 'woocommerce_account_my-customer_endpoint', $plugin_public, 'my_customer_endpoint');
@@ -211,7 +211,14 @@ class Shibbircore {
 		$this->loader->add_filter( 'query_vars', $plugin_public, 'my_custom_query_vars');
 		$this->loader->add_filter( 'show_admin_bar', $plugin_public, 'show_admin_bar_callback');
 		$this->loader->add_filter( 'woocommerce_enqueue_styles', $plugin_public, 'disable_woocommerce_styles');
-
+		$this->loader->add_filter( 'change_browse_product_element', $plugin_public, 'change_browse_product', 20, 3);
+		
+		if (!function_exists('is_plugin_active')) {
+			include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+			if( is_plugin_active( 'affiliate-wp/affiliate-wp.php' ) ) {
+				$this->loader->add_filter( 'affwp_affiliate_area_page_url', $plugin_public, 'affwp_add_tab', 10, 3);
+			}
+		}
 	}
 
 	/**
