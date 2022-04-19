@@ -35,8 +35,10 @@ table.table tr td {
 }
 
 .woocommerce-MyAccount-navigation ul>li.is-active>a {
-  margin-top : 5px;
-  margin-left : 5px;
+  background-color: #9bb70c;
+  color: #fff !important;
+  margin: 0;
+  border : none;
 }
 
 /* Membership Page */
@@ -139,4 +141,42 @@ a.added_to_cart.wc-forward {
 
 .video-wrapper .video img {
   width : 100%;
+}
+
+.woocommerce {
+  float: left;
+  position: relative;
+  box-sizing: border-box;
+  width : 100%;
+}
+
+
+.woocommerce-MyAccount-navigation {
+  float: left;
+  width: calc( 25% - 20px) !important;
+  margin: 0px 20px 20px 0 !important;
+}
+
+.woocommerce-MyAccount-navigation ul>li {
+  display: inline-block;
+  width: 100%;
+}
+
+.woocommerce-MyAccount-content {
+  float: left;
+  width: 75%;
+  box-sizing: border-box;
+}
+
+.woocommerce-MyAccount-navigation ul>li>a {
+  width : 100%;
+  border-bottom : 1px solid #ddd;
+  text-align: left !important;
+  border-bottom : 1px solid #ddd !important;
+}
+
+@media screen and ( max-width : 768px ) {
+  .woocommerce-MyAccount-navigation, .woocommerce-MyAccount-content {
+      width : 100% !important;
+  }
 }
