@@ -413,4 +413,55 @@ class Shibbircore_Public {
 	public function affwp_add_tab( $url, $page_id, $tab ) {
 		return esc_url_raw( add_query_arg( 'tab', $tab ) );
 	}
+
+	public function woocommerce_edit_account_form_start_callback() {
+		?>
+		<p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+			<label for="image"><?php esc_html_e( 'Profile Picture', 'woocommerce' ); ?>&nbsp;<span class="required">*</span></label>
+			<input type="file" class="woocommerce-Input" name="image" accept="image/x-png,image/gif,image/jpeg">
+		</p>
+		<?php
+	}
+
+	public function woocommerce_save_account_details_callback ( $user_id ) {
+		if ( isset( $_FILES['image'] ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/image.php' );
+			require_once( ABSPATH . 'wp-admin/includes/file.php' );
+			require_once( ABSPATH . 'wp-admin/includes/media.php' );
+	
+			$attachment_id = media_handle_upload( 'image', 0 );
+	
+			if ( is_wp_error( $attachment_id ) ) {
+				update_user_meta( $user_id, 'image', $_FILES['image'] . ": " . $attachment_id->get_error_message() );
+			} else {
+				update_user_meta( $user_id, 'image', $attachment_id );
+			}
+	   }
+	}
+
+	public function woocommerce_profile_image_callback() {
+		// Get current user id
+		$user_id = get_current_user_id();
+
+		// Get attachment id
+		$attachment_id = get_user_meta( $user_id, 'image', true );
+	
+		// True
+		if ( $attachment_id ) {
+			$original_image_url = wp_get_attachment_url( $attachment_id );
+	
+			// Display Image instead of URL
+			echo wp_get_attachment_image( $attachment_id, 'full' );
+		}
+	}
+
+	public function woocommerce_edit_account_form_tag_callback() {
+		echo 'enctype="multipart/form-data"';
+	}
+
+	public function woocommerce_save_account_details_errors_callback( $args ) {
+		if ( isset($_POST['image']) && empty($_POST['image']) ) {
+			$args->add( 'image_error', __( 'Please provide a valid image', 'woocommerce' ) );
+		}
+	}
 }

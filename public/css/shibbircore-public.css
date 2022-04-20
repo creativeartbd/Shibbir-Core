@@ -41,6 +41,12 @@ table.table tr td {
   border : none;
 }
 
+.woocommerce .woo-profile-pic {
+  border : 1px solid #ddd;
+  padding : 10px 10px 0 10px;
+  margin-bottom: 10px;
+}
+
 /* Membership Page */
 .wpb_wrapper .dt-sc-pro-price {
   display: none;
