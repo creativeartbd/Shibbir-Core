@@ -464,4 +464,27 @@ class Shibbircore_Public {
 			$args->add( 'image_error', __( 'Please provide a valid image', 'woocommerce' ) );
 		}
 	}
+
+	public function woocommerce_before_account_navigation_callback() {
+		echo "<div class='woocommerce-MyAccount-navigation-wrapper'>";
+			$user_id = get_current_user_id();
+			// Get attachment id
+			$attachment_id = get_user_meta( $user_id, 'image', true );
+			$edit_account_url = wc_customer_edit_account_url();
+
+			echo "<div class='woo-profile-pic'>";
+			if ( $attachment_id ) {
+				// Display Image instead of URL
+				echo wp_get_attachment_image( $attachment_id, 'thumbnail' );
+			} else {
+				$empty_profile_pic = plugin_dir_url( __FILE__ ) . 'img/empty-profile-pic.png';
+				echo "<img src='$empty_profile_pic' width='100%' />";
+			}
+			echo "<p>Click <a href='$edit_account_url'>here</a> to upload profile picture.</p>";
+			echo "</div>";
+	}
+	
+	public function woocommerce_after_account_navigation_callback() {
+		echo "</div>";
+	}
 }

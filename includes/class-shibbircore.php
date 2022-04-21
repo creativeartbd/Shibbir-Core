@@ -205,6 +205,8 @@ class Shibbircore {
 		$this->loader->add_action( 'woocommerce_profile_image', $plugin_public, 'woocommerce_profile_image_callback' );
 		$this->loader->add_action( 'woocommerce_edit_account_form_tag', $plugin_public, 'woocommerce_edit_account_form_tag_callback' );
 		$this->loader->add_action( 'woocommerce_save_account_details_errors',$plugin_public, 'woocommerce_save_account_details_errors_callback', 10, 1 );
+		$this->loader->add_action('woocommerce_before_account_navigation', $plugin_public, 'woocommerce_before_account_navigation_callback');
+		$this->loader->add_action( 'woocommerce_after_account_navigation', $plugin_public, 'woocommerce_after_account_navigation_callback' );
 		// WooCommece account end point
 
 		$this->loader->add_action( 'init', $plugin_public, 'my_custom_endpoints');

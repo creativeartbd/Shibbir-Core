@@ -41,11 +41,6 @@ table.table tr td {
   border : none;
 }
 
-.woocommerce .woo-profile-pic {
-  border : 1px solid #ddd;
-  padding : 10px 10px 0 10px;
-  margin-bottom: 10px;
-}
 
 /* Membership Page */
 .wpb_wrapper .dt-sc-pro-price {
@@ -116,7 +111,7 @@ a.added_to_cart.wc-forward {
   border : 1px solid #ddd; 
   border-radius: 5px;
   padding : 10px;
-  width : calc( 25% - 15px);
+  width : calc( 33.33% - 15px);
   margin-bottom : 25px;
   margin-right : 15px;
 }
@@ -126,7 +121,7 @@ a.added_to_cart.wc-forward {
   margin-bottom: 15px;
 }
 
-.video-wrapper .video:nth-child(4n) {
+.video-wrapper .video:nth-child(3n) {
   margin-right : 0;
 }
 
@@ -156,11 +151,26 @@ a.added_to_cart.wc-forward {
   width : 100%;
 }
 
-
-.woocommerce-MyAccount-navigation {
+.woocommerce-MyAccount-navigation-wrapper {
   float: left;
   width: calc( 25% - 20px) !important;
   margin: 0px 20px 20px 0 !important;
+}
+
+.woocommerce-MyAccount-navigation-wrapper .woo-profile-pic img {
+  width : 100%;
+}
+
+.woocommerce .woo-profile-pic {
+  border : 1px solid #ddd;
+  padding : 10px 10px 0 10px;
+  margin-bottom: 10px;
+}
+
+.woocommerce-MyAccount-navigation.trainer-video ul li {
+  width: 50%;
+  display: inline-block;
+  background-color: #ddd;
 }
 
 .woocommerce-MyAccount-navigation ul>li {
