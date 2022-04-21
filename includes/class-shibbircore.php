@@ -221,7 +221,7 @@ class Shibbircore {
 		$this->loader->add_filter( 'woocommerce_account_menu_items', $plugin_public, 'remove_woo_menu_items', 99);
 		$this->loader->add_filter( 'after_switch_theme', $plugin_public, 'my_custom_flush_rewrite_rules');
 		$this->loader->add_filter( 'query_vars', $plugin_public, 'my_custom_query_vars');
-		$this->loader->add_filter( 'show_admin_bar', $plugin_public, 'show_admin_bar_callback');
+		$this->loader->add_filter( 'show_admin_bar', $plugin_public, 'show_admin_bar_callback', 99);
 		$this->loader->add_filter( 'woocommerce_enqueue_styles', $plugin_public, 'disable_woocommerce_styles');
 		$this->loader->add_filter( 'change_browse_product_element', $plugin_public, 'change_browse_product', 20, 3);
 		
