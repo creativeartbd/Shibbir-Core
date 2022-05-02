@@ -74,7 +74,7 @@ if ( in_array( 'trainer', (array) $user->roles ) ) {
 				<th><b>Personalised Link</b></th>
 				<td><?php echo $user_meta['set_up_personalise_link'][0]; ?></td>
 			</tr>
-			<tr>
+			<!-- <tr>
 				<th><b>Hide for Online Coaching</b></th>
 				<td><?php echo $user_meta['hide_for_online_coaching'][0] == 0 ? 'No' : 'Yes'; ?></td>
 			</tr>
@@ -86,17 +86,17 @@ if ( in_array( 'trainer', (array) $user->roles ) ) {
 				<th><b>Show Trainer in Trainer Online Coaching</b></th>
 				<td>
 					<?php
-					$show_trainer_in_trainer_online_coaching = $user_meta['show_trainer_in_trainer_online_coaching'][0];
-					if( 'trainer_3_4_other' == $show_trainer_in_trainer_online_coaching ) {
-						echo 'Trainer of first and 3-4 other.';
-					} elseif ( 'only_trainer' == $show_trainer_in_trainer_online_coaching ) {
-						echo 'Only Trainer';
-					} elseif ( 'trainer_all_other' == show_trainer_in_trainer_online_coaching ) {
-						echo 'Trainer of First and all other';
-					}
+					// $show_trainer_in_trainer_online_coaching = $user_meta['show_trainer_in_trainer_online_coaching'][0];
+					// if( 'trainer_3_4_other' == $show_trainer_in_trainer_online_coaching ) {
+					// 	echo 'Trainer of first and 3-4 other.';
+					// } elseif ( 'only_trainer' == $show_trainer_in_trainer_online_coaching ) {
+					// 	echo 'Only Trainer';
+					// } elseif ( 'trainer_all_other' == show_trainer_in_trainer_online_coaching ) {
+					// 	echo 'Trainer of First and all other';
+					// }
 					?>
 				</td>
-			</tr>
+			</tr> -->
 			<tr>
 				<th><b>Membership Commission</b></th>
 				<td>
