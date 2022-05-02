@@ -108,6 +108,7 @@ if ( in_array( 'trainer', (array) $user->roles ) ) {
 							$get_product = wc_get_product( $user_meta["membership_commission_{$i}_membership_level"][0] );
 							echo $get_product->get_name() . ' (' . $get_product->get_price_html() . ')';
 							echo ' - ';
+							echo $user_meta["membership_commission_{$i}_commission"][0];
 							echo '<hr/>';
 						}
 					}
