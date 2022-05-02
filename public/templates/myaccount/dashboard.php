@@ -59,11 +59,14 @@ if ( in_array( 'trainer', (array) $user->roles ) ) {
 				<th><b>Membership Level</b><br/><small>Membership level that you are currently taking</small></th>
 				<td>
 				<?php
+				echo '<ul>';
 				foreach( $membership_level as $key => $level ) {
 					$product = wc_get_product( $level );
+					echo '<li>';
 					echo $product->get_name();
-					echo '<br/>';
+					echo '</li>';
 				}
+				echo '</ul>';
 				?></td>
 			</tr>
 			<tr>
@@ -102,17 +105,20 @@ if ( in_array( 'trainer', (array) $user->roles ) ) {
 				<td>
 				<?php  
 				$all_products = wc_get_products(array('taxonomy'=>'membership-level'));
+				echo '<ul>';
 				for( $i = 0; $i <6; $i++ ) {
 					if( isset( $user_meta["membership_commission_{$i}_membership_level"][0] ) ) {
 						if( in_array( $user_meta["membership_commission_{$i}_membership_level"][0], $user_memberships[0] ) ) {
 							$get_product = wc_get_product( $user_meta["membership_commission_{$i}_membership_level"][0] );
+							echo '<li>';
 							echo $get_product->get_name() . ' (' . $get_product->get_price_html() . ')';
 							echo ' - ';
 							echo $user_meta["membership_commission_{$i}_commission"][0] . '%';
-							echo '<hr/>';
+							echo '</li>';
 						}
 					}
 				}
+				echo '</ul>';
 				?>
 				</td>
 			</tr>
@@ -120,19 +126,22 @@ if ( in_array( 'trainer', (array) $user->roles ) ) {
 				<th><b>Customer Discount</b></th>
 				<td>
 					<?php
+					echo '<ul>';
 					for( $i = 0; $i <6; $i++ ) {
 						if( isset( $user_meta["customer_discount_{$i}_membership_level"][0] ) ) {
 							if( in_array( $user_meta["customer_discount_{$i}_membership_level"][0], $user_memberships[0] ) ) {
 								$get_product = wc_get_product( $user_meta["customer_discount_{$i}_membership_level"][0] );
 								$coupon = new WC_Coupon( $user_meta["customer_discount_{$i}_coupon"][0] );
 								$coupon_code = $coupon->get_code() . ' (' . wc_format_decimal( $coupon->get_amount(), 2 ) . ')';
+								echo '<li>';
 								echo $get_product->get_name() . ' (' . $get_product->get_price_html() . ')';
 								echo ' - ';
 								echo $coupon_code;
-								echo '<hr/>';
+								echo '</li>';
 							}
 						}
 					}
+					echo '</ul>';
 					?>
 				</td>
 			</tr>
