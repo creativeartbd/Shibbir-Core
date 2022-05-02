@@ -2,6 +2,9 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
+ul, .ul {
+  margin-left: 10px;
+}
 
 .trainer-video ul li  {
   float : right;
