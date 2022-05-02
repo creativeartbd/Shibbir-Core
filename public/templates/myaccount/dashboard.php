@@ -141,10 +141,11 @@ if ( in_array( 'trainer', (array) $user->roles ) ) {
 				<td>
 					<?php
 					$trainer_specialization = unserialize( $user_meta['trainer_specialization'][0] );
+					echo '<ul>';
 					foreach( $trainer_specialization as $specialization ) {
-						echo $specialization;
-						echo '<hr/>';
+						echo '<li>'.$specialization.'</li>';
 					} 
+					echo '</ul>';
 					?>
 				</td>
 			</tr>
